@@ -1,0 +1,231 @@
+﻿<RibbonWindow x:Class="FillCalcWin.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
+        xmlns:local="clr-namespace:FillCalcWin"
+        mc:Ignorable="d"
+        Icon="calculator.ico"  
+        Title="Trimix blending calculator .NET/WPF" Height="600" Width="500" Background="LightBlue" 
+        MinWidth="450" MinHeight="550" MaxWidth="700" MaxHeight="700">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="120"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Ribbon x:Name="RibbonWin"  >
+            <Ribbon.ApplicationMenu>
+                <RibbonApplicationMenu KeyTip="F">
+                    <RibbonApplicationMenuItem Header="About" Click="rAppMenuAbout"  />
+                    <RibbonApplicationMenuItem Header="Check updates"  />
+                    <RibbonApplicationMenuItem Header="Options"  />
+                    <RibbonApplicationMenuItem Header="Exit" Click="rAppMenuExit"  />
+                </RibbonApplicationMenu>
+            </Ribbon.ApplicationMenu>
+            <!-- <RibbonTab Header="Home" KeyTip="H" >-->
+            <RibbonGroup x:Name="OutPutGroup" Header="Output">
+                <RibbonButton Label="Copy" SmallImageSource="/Resources/clipboard_plus.png" Click="rButton_Copy"></RibbonButton>
+                <RibbonButton Label="Print" SmallImageSource="/Resources/printer.png" Click="rButton_Print"></RibbonButton>
+                <RibbonButton Label="Save" SmallImageSource="/Resources/save_16x.png" Click="rBotton_Save"></RibbonButton>
+            </RibbonGroup>
+            <RibbonGroup Name="RBgas" Header="Gas">
+
+
+                <RibbonComboBox Name="rCMB_bar" Label="want bar" 
+                        ToolTipTitle="Wanted tank pressure in Bar"
+                        ToolTipDescription="Quick selection for wanted tank pressure for major tank pressure grades"
+                        >
+                    <RibbonGallery  
+                          SelectedValuePath="Tag" 
+                          SelectedValue="{Binding Path=stop_bar}">
+                        <RibbonGalleryCategory>
+                            <RibbonGalleryItem Tag="200"  IsSelected="True">200</RibbonGalleryItem>
+                            <RibbonGalleryItem Tag="230">230</RibbonGalleryItem>
+                            <RibbonGalleryItem Tag="300">300</RibbonGalleryItem>
+                        </RibbonGalleryCategory>
+                    </RibbonGallery>
+                </RibbonComboBox>
+                <RibbonComboBox Name="rStdGasCmb" Label="std.gas" IsEditable="True"
+                        ToolTipTitle="Wanted standard gas composition"
+                        ToolTipDescription="Quick selection of standard O2/He mixes for wanted gas">
+                    <RibbonGallery Name="rgStdGas" 
+					      SelectedValuePath="Id"
+					      
+						  SelectionChanged="rgStdGas_SelectionChanged">
+                        <RibbonGalleryCategory 
+                                ItemsSource="{Binding Path=StdGasList}" 
+                                DisplayMemberPath="Name" 
+                             />
+                    </RibbonGallery>
+                </RibbonComboBox>
+                <RibbonToggleButton Name="GasLaw" Label="Van der Waals"
+                        ToolTipTitle="Toggle Van der Waals gas law on"
+                        ToolTipDescription="Toggle this button on for calculating gas blending with Van der Waals gas law instead of ideal gas law">
+                </RibbonToggleButton>
+            </RibbonGroup>
+            <RibbonGroup x:Name="EditGroup" Header="Edit">
+                <RibbonButton Label="Empty" SmallImageSource="/Resources/battery-empty.png" 
+                                  ToolTipTitle="click for empty tank" Click="rButton_EmptyTank"></RibbonButton>
+            </RibbonGroup>
+            <RibbonGroup x:Name="HelpGroup" Header="Help">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <RibbonButton Grid.Column="0" Grid.Row="0" Label="About" Click="rAppMenuAbout"  />
+                    <RibbonButton Grid.Column="0" Grid.Row="1" Label="Bugs" Click="rBugs"  />
+                    <RibbonButton Grid.Column="1" Grid.Row="0" Grid.RowSpan="3" 
+                                  Label="HELP" LargeImageSource="/Resources/question.png" Click="rButton_Help" ></RibbonButton>
+                </Grid>
+            </RibbonGroup>
+            <!--</RibbonTab>-->
+        </Ribbon>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="3*"></RowDefinition>
+                <RowDefinition Height="3*"></RowDefinition>
+                <RowDefinition Height="0*"></RowDefinition>
+                <RowDefinition Height="4*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <GroupBox Header="Current tank mix" Grid.Column="0" Grid.Row="0">
+                <Grid ToolTip="current tank status, use spinboxes or type in the numbers">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"></ColumnDefinition>
+                        <ColumnDefinition Width="1*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"></RowDefinition>
+                        <RowDefinition Height="1*"></RowDefinition>
+                        <RowDefinition Height="1*"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <Label Content="Current tank pressure (bar)" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Right"></Label>
+                    <xctk:IntegerUpDown Name="iud_start_bar" Grid.Column="1" Grid.Row="0" Height="25"  Minimum="0" Maximum="300"
+                            Value='{Binding Path=start_bar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}'
+                                        ToolTip="enter the current tank pressure in Bar"/>
+                    <Label Content="Current Oxygen (%)" Grid.Column="0" Grid.Row="1" Height="25" HorizontalAlignment="Right"></Label>
+                    <xctk:IntegerUpDown Name="iud_start_o2" Grid.Column="1" Grid.Row="1" Height="25"  Minimum="10" Maximum="100"
+                            Value="{Binding Path=start_o2}" ToolTip="enter the current Oxygen %"/>
+                    <Label Content="Current Helium (%)" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Right"></Label>
+                    <xctk:IntegerUpDown Name="iud_start_he" Grid.Column="1" Grid.Row="2" Height="25"  Minimum="0" Maximum="90"
+                            Value="{Binding Path=start_he}" ToolTip="enter the current Helium %"/>
+                </Grid>
+            </GroupBox>
+            <GroupBox Header="Wanted tank mix" Grid.Column="0" Grid.Row="1">
+                <Grid ToolTip="enter the WANTED tank pressure O2 and He content">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"></ColumnDefinition>
+                        <ColumnDefinition Width="1*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"></RowDefinition>
+                        <RowDefinition Height="1*"></RowDefinition>
+                        <RowDefinition Height="1*"></RowDefinition>
+                        <!--<RowDefinition Height="1*"></RowDefinition>-->
+                    </Grid.RowDefinitions>
+
+                    <Label Content="Wanted tank pressure (bar)" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Right"></Label>
+                    <xctk:IntegerUpDown Name="iud_stop_bar" Grid.Column="1" Grid.Row="0" Height="25"  Minimum="100" Maximum="300"
+                            Value="{Binding Path=stop_bar}"/>
+                    <!--<ComboBox Name="cmbBars"  Grid.Column="1" Grid.Row="0" Margin="0 2 10 2" 
+                          SelectedValuePath="Tag" 
+                          SelectedValue="{Binding Path=stop_bar}">
+
+                        <ComboBoxItem Tag="200"  IsSelected="True">200</ComboBoxItem>
+                        <ComboBoxItem Tag="230">230</ComboBoxItem>
+                        <ComboBoxItem Tag="300">300</ComboBoxItem>
+                    </ComboBox>-->
+                    <!--<ComboBox Grid.Column="1" Grid.Row="2" Margin="0 2 10 2">
+                    <ComboBoxItem IsSelected="True">AIR</ComboBoxItem>
+                    <ComboBoxItem>EAN 32</ComboBoxItem>
+                    <ComboBoxItem>TMX 21/35</ComboBoxItem>
+                    <ComboBoxItem>TMX 18/45</ComboBoxItem>
+                    <ComboBoxItem>EAN 50</ComboBoxItem>
+                </ComboBox>-->
+
+                    <!--<ComboBox Name="StdGasCmb" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"  Margin="0 2 10 2" VerticalAlignment="Stretch"
+                  ItemsSource="{Binding Path=StdGasList}"
+                  SelectedValuePath="Id"
+                  DisplayMemberPath="Name" 
+                  SelectionChanged="ComboBox_SelectionChanged"
+                  />-->
+
+                    <Label Content="Wanted Oxygen (%)" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Right"></Label>
+                    <xctk:IntegerUpDown Name="iud_stop_o2" Grid.Column="1" Grid.Row="1" Height="25"  Minimum="10" Maximum="100"
+                            Value="{Binding Path=stop_o2}"/>
+                    <Label Content="Wanted Helium (%)" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Right"></Label>
+                    <xctk:IntegerUpDown Name="iud_stop_he" Grid.Column="1" Grid.Row="2" Height="25"  Minimum="0" Maximum="90"
+                            Value="{Binding Path=stop_he}"/>
+                </Grid>
+            </GroupBox>
+            <GroupBox Header="Fill cost calculation" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Background="Aquamarine">
+                <Grid ToolTip="calculate the total cost of your fill">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"></ColumnDefinition>
+                        <ColumnDefinition Width="1*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"></RowDefinition>
+                        <RowDefinition Height="1*"></RowDefinition>
+                        <RowDefinition Height="1*"></RowDefinition>
+                        <RowDefinition Height="1*"></RowDefinition>
+                        <RowDefinition Height="4*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Label Content="tank size (liters)" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Right"></Label>
+                    <xctk:IntegerUpDown Name="iud_tank_liters" Grid.Column="1" Grid.Row="0" Height="25"  Minimum="1" Maximum="50"
+                            Value="{Binding Path=tank_liters}"/>
+                    <Label Content="Oxygen price (€/m^2)" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Right"></Label>
+                    <xctk:DecimalUpDown Name="iud_o2_price" Grid.Column="1" Grid.Row="1" Height="25"  Minimum="1" Maximum="300"
+                            Value="{Binding Path=o2_price}"/>
+                    <Label Content="Helium price (€/m^2)" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Right"></Label>
+                    <xctk:DecimalUpDown Name="iud_he_price" Grid.Column="1" Grid.Row="2" Height="25"  Minimum="1" Maximum="300"
+                            Value="{Binding Path=he_price}"/>
+                    <Label Content="compressor run price (€)" Grid.Column="0" Grid.Row="3" HorizontalAlignment="Right"></Label>
+                    <xctk:DecimalUpDown Name="iud_compressor_price" Grid.Column="1" Grid.Row="3" Height="25"  Minimum="1" Maximum="100"
+                            Value="{Binding Path=compressor_price}"/>
+                    <GroupBox Header="Total cost of the fill" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2">
+                        <TextBlock Name="txt_cost"  Grid.Column="0" Grid.Row="4"  Background="WhiteSmoke">
+                    Nothing calculated<LineBreak/>yet
+                        </TextBlock>
+                    </GroupBox>
+                </Grid>
+            </GroupBox>
+            <!--<ComboBox Grid.Column="0" Grid.Row="2" Margin="10 5 10 4" HorizontalAlignment="Center">
+                <ComboBoxItem IsSelected="True">Ideal Gas Law</ComboBoxItem>
+                <ComboBoxItem>Van Der Waals law</ComboBoxItem>
+            </ComboBox>-->
+            <TabControl Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" 
+                    SelectedIndex="{Binding Path=selected_tab}"
+                        ToolTip="select your blending method to get instructions">
+                <TabItem Header="Air top">
+                    <TextBlock x:Name="txt_air">Nothing yet</TextBlock>
+                </TabItem>
+                <TabItem Header="Nitrox CFM top">
+                    <TextBlock x:Name="txt_nitrox">Nothing yet</TextBlock>
+                </TabItem>
+                <TabItem Header="Trimix CFM top">
+                    <TextBlock x:Name="txt_tmx">Nothing yet</TextBlock>
+                </TabItem>
+                <TabItem Header="Partial Pressure">
+                    <TextBlock x:Name="txt_pp">Nothing yet</TextBlock>
+                </TabItem>
+                <TabItem Header="He + Nitrox CFM">
+                    <TextBlock x:Name="txt_henx">Nothing yet</TextBlock>
+                </TabItem>
+            </TabControl>
+        </Grid>
+    </Grid>
+
+    </RibbonWindow>

@@ -16,6 +16,6 @@ See also the doc:
   - the GUI part is coded in XAML
   - code behind is C#
 - precompiled installer is available at GitHub
-https://github.com/eianlei/WinFillCalc/releases
+https://github.com/eianlei/FillCalcWin/releases
 
 

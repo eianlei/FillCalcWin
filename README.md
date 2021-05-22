@@ -23,6 +23,7 @@ https://github.com/eianlei/FillCalcWin/releases
 # supported platforms
 - FillCalcWin runs on all Windows platforms from Win 7 SP2 and newer
 - Unlike the Python version FillCalc2.py, FillCalcWin will not run on MAC or Linux
-- But FillCalcWin is really easy to install and use on Windows, because a precompiled binary and installed can be made easily
+- But FillCalcWin is really easy to install and use on Windows, because a precompiled binary and installer can be made easily. So almost anyone can install and use it. 
+- The Python version is somewhat hard to install if you are not familiar with all the tools.
 
 

@@ -359,5 +359,17 @@
       <FileType>Satellite</FileType>
     </PublishFile>
   </ItemGroup>
+  <ItemGroup>
+    <SplashScreen Include="Resources\20210522_181612_resz.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="20210522_181612_resz.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\DSC_3576.JPG" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="DSC_3576.JPG" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

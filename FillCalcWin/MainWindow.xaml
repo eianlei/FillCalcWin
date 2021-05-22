@@ -6,8 +6,8 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
         xmlns:local="clr-namespace:FillCalcWin"
         mc:Ignorable="d"
-        Icon="calculator.ico"  
-        Title="Trimix blending calculator .NET/WPF" Height="600" Width="500" Background="LightBlue" 
+        Icon="calculator.ico"
+        Title="FillCalcWin trimix blending calculator" Height="600" Width="500" Background="LightBlue" 
         MinWidth="450" MinHeight="550" MaxWidth="700" MaxHeight="700">
     <Grid>
         <Grid.RowDefinitions>
@@ -89,6 +89,9 @@
         </Ribbon>
 
         <Grid Grid.Row="1">
+            <Grid.Background>
+                <ImageBrush ImageSource="DSC_3576.JPG"></ImageBrush>
+            </Grid.Background>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
@@ -99,7 +102,7 @@
                 <RowDefinition Height="0*"></RowDefinition>
                 <RowDefinition Height="4*"></RowDefinition>
             </Grid.RowDefinitions>
-            <GroupBox Header="Current tank mix" Grid.Column="0" Grid.Row="0">
+            <GroupBox Header="Current tank mix" Grid.Column="0" Grid.Row="0" Background="LavenderBlush" Opacity="0.9">
                 <Grid ToolTip="current tank status, use spinboxes or type in the numbers">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*"></ColumnDefinition>
@@ -123,7 +126,7 @@
                             Value="{Binding Path=start_he}" ToolTip="enter the current Helium %"/>
                 </Grid>
             </GroupBox>
-            <GroupBox Header="Wanted tank mix" Grid.Column="0" Grid.Row="1">
+            <GroupBox Header="Wanted tank mix" Grid.Column="0" Grid.Row="1" Background="Beige" Opacity="0.9">
                 <Grid ToolTip="enter the WANTED tank pressure O2 and He content">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*"></ColumnDefinition>
@@ -170,7 +173,7 @@
                             Value="{Binding Path=stop_he}"/>
                 </Grid>
             </GroupBox>
-            <GroupBox Header="Fill cost calculation" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Background="Aquamarine">
+            <GroupBox Header="Fill cost calculation" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Background="Aquamarine" Opacity="0.9">
                 <Grid ToolTip="calculate the total cost of your fill">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*"></ColumnDefinition>

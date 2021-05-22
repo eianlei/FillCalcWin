@@ -18,7 +18,7 @@ See also the doc about the Python version:
   - code behind is C#
 - precompiled FillCalcWin installer is available at GitHub
 https://github.com/eianlei/FillCalcWin/releases
-- FillCalcWin contains embedded Help file, but you can also read it from https://github.com/eianlei/FillCalcWin/blob/master/FillCalcWin/Resources/fillcalc2.rtf
+- FillCalcWin contains embedded Help file, but you can also get PDF version from here: 
 
 # supported platforms
 - FillCalcWin runs on all Windows platforms from Win 7 SP2 and newer

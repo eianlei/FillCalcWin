@@ -422,7 +422,7 @@ namespace FillCalcWin
         private void rBugs(object sender, RoutedEventArgs e)
         {
             // Launch browser to github issues...
-            System.Diagnostics.Process.Start("https://github.com/eianlei/WinFillCalc_private/issues");
+            System.Diagnostics.Process.Start("https://github.com/eianlei/FillCalcWin/issues");
         }
     }
 }

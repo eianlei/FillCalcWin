@@ -20,8 +20,8 @@
         <StackPanel Grid.Row="1" Orientation="Horizontal">
             <TextBlock Margin="10 0 10 0" Text="GitHub:  " xml:space="preserve"/>
             <TextBlock>           
-    <Hyperlink NavigateUri="https://github.com/eianlei/WinFillCalc_private" RequestNavigate="Hyperlink_RequestNavigate">
-        https://github.com/eianlei/WinFillCalc_private
+    <Hyperlink NavigateUri="https://github.com/eianlei/FillCalcWin" RequestNavigate="Hyperlink_RequestNavigate">
+        https://github.com/eianlei/FillCalcWin
     </Hyperlink>
             </TextBlock>
         </StackPanel>

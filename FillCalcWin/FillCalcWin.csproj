@@ -27,7 +27,7 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ErrorReportUrl>https://github.com/eianlei/FillCalcWin/issues</ErrorReportUrl>
     <PublisherName>Ian Leiman</PublisherName>
-    <ApplicationRevision>9</ApplicationRevision>
+    <ApplicationRevision>10</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -68,7 +68,7 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>FillCalcWin_TemporaryKey.pfx</AssemblyOriginatorKeyFile>

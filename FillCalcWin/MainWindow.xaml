@@ -29,10 +29,10 @@
                 <RibbonButton Label="Print" SmallImageSource="/Resources/printer.png" Click="rButton_Print"></RibbonButton>
                 <RibbonButton Label="Save" SmallImageSource="/Resources/save_16x.png" Click="rBotton_Save"></RibbonButton>
             </RibbonGroup>
-            <RibbonGroup Name="RBgas" Header="Gas">
+            <RibbonGroup Name="RBgas" Header="Gas" Width="Auto">
 
 
-                <RibbonComboBox Name="rCMB_bar" Label="want bar" 
+                <RibbonComboBox Name="rCMB_bar" Label="want bar" Width="Auto" HorizontalAlignment="Right" 
                         ToolTipTitle="Wanted tank pressure in Bar"
                         ToolTipDescription="Quick selection for wanted tank pressure for major tank pressure grades"
                         >
@@ -46,7 +46,7 @@
                         </RibbonGalleryCategory>
                     </RibbonGallery>
                 </RibbonComboBox>
-                <RibbonComboBox Name="rStdGasCmb" Label="std.gas" IsEditable="True"
+                <RibbonComboBox Name="rStdGasCmb" Label="std.gas"  Width="Auto" HorizontalAlignment="Right"
                         ToolTipTitle="Wanted standard gas composition"
                         ToolTipDescription="Quick selection of standard O2/He mixes for wanted gas">
                     <RibbonGallery Name="rgStdGas" 

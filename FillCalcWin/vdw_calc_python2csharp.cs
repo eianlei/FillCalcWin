@@ -168,6 +168,7 @@ namespace FillCalcWin
             // instead use algorithms at RootFinding.cs moduel, reused from
             // https://www.codeproject.com/Articles/79541/Three-Methods-for-Root-finding-in-C
             VdW_eqation vdw_eq = new VdW_eqation(p: pressure, n: seed_n, V: volume, T: temp_K, a: mix_a, b: mix_b);
+            //TODO: add try cath exception here
             double solved_n = RootFinding.Bisect(vdw_eq.solve_mols, seed_n * 0.6, seed_n *1.5, 0.001, 0.1);
 
 
@@ -241,6 +242,7 @@ namespace FillCalcWin
 
             // how many mols of gas we want to have, in total and of each kind
             double vdw_want_mols_all = vdw_solve_mols(want_bar, volume, want_o2_f, want_he_f, want_n2_f, end_temp_c);
+            //TODO: error checking to be nicer
             if (vdw_want_mols_all > 0)
             {
                 vdw_want_mols_o2 = vdw_want_mols_all * want_o2_f;
@@ -267,7 +269,14 @@ namespace FillCalcWin
 
             // then solve for pressure of this new mix
             var mix_helium_bars = vdw_solve_pressure(mix_he_mols_all, volume, mix_he_o2_f, mix_he_he_f, mix_he_n2_f, start_temp_c);
+            //TODO: more error checking needed here
             var vdw_fill_he_bars = mix_helium_bars - start_bar;
+            if (vdw_fill_he_bars < 0) 
+            {
+                vdw_result.status_txt = "ERROR 12: negative Helium fill";
+                vdw_result.status_code = 12;
+                return vdw_result;
+            }
 
             // air is topped last, but we need to calculate how much we need it, so we can calculate for oxygen
             var air_o2_mols_o2 = vdw_fill_mols_n2 * (0.21 / 0.79);
@@ -279,7 +288,14 @@ namespace FillCalcWin
 
             // then solve for pressure of this new mix
             var mix_oxygen_bars = vdw_solve_pressure(mix_o2_mols_all, volume, mix_o2_o2_f, mix_o2_he_f, mix_o2_n2_f, start_temp_c);
+            //TODO: error checking needed here
             var vdw_fill_o2_bars = mix_oxygen_bars - mix_helium_bars;
+            if (vdw_fill_o2_bars < 0)
+            {
+                vdw_result.status_txt = "ERROR 13: negative Oxygen fill";
+                vdw_result.status_code = 13;
+                return vdw_result;
+            }
 
             // finally air
             var vdw_fill_air_bars = want_bar - mix_oxygen_bars;
@@ -288,10 +304,31 @@ namespace FillCalcWin
             vdw_result.fill_air_bars = vdw_fill_air_bars;
 
             // build the string for return
-            string start_mix = $"Starting from {start_bar} bar with mix {start_o2:F0}/{start_he:F0} (O2/He).";
+            string start_mix;
+            if (start_bar >0 )
+                start_mix = $"Starting from {start_bar} bar with mix {start_o2:F0}/{start_he:F0} (O2/He).";
+            else
+                start_mix = "Starting from EMPTY TANK ";
             string result_mix = $"Resulting mix will be {want_o2:F0}/{want_he:F0} (O2/He).";
-            string he_fill = $"From {start_bar:F1} bars add {vdw_fill_he_bars:F1} bar Helium,";
-            string o2_fill = $"From {mix_helium_bars:F1} bars add {vdw_fill_o2_bars:F1} bar Oxygen,";
+            string he_fill;
+            if (vdw_fill_he_bars > 0)
+            { 
+                he_fill = $"From {start_bar:F1} bars add {vdw_fill_he_bars:F1} bar Helium,"; 
+            }
+            else 
+            { 
+                he_fill = "* no Helium added"; 
+            }
+            string o2_fill;
+            if (vdw_fill_o2_bars > 0)
+            { 
+                o2_fill = $"From {mix_helium_bars:F1} bars add {vdw_fill_o2_bars:F1} bar Oxygen,"; 
+            }
+            else
+            {
+                o2_fill = "* no Oxygen added";
+            }
+
             string result =
                 $"{start_mix}\n" +
                 $"Van der Waals blend:\n" +

@@ -97,9 +97,9 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="3*"></RowDefinition>
-                <RowDefinition Height="3*"></RowDefinition>
-                <RowDefinition Height="0*"></RowDefinition>
+                <RowDefinition Height="2.5*"></RowDefinition>
+                <RowDefinition Height="2.5*"></RowDefinition>
+                <RowDefinition Height="1*"></RowDefinition>
                 <RowDefinition Height="4*"></RowDefinition>
             </Grid.RowDefinitions>
             <GroupBox Header="Current tank mix" Grid.Column="0" Grid.Row="0" Background="LavenderBlush" Opacity="0.9">
@@ -209,25 +209,26 @@
                 <ComboBoxItem IsSelected="True">Ideal Gas Law</ComboBoxItem>
                 <ComboBoxItem>Van Der Waals law</ComboBoxItem>
             </ComboBox>-->
-            <TabControl Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" 
+            <TabControl Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" 
                     SelectedIndex="{Binding Path=selected_tab}"
-                        ToolTip="select your blending method to get instructions">
-                <TabItem Header="Air top">
-                    <TextBlock x:Name="txt_air">Nothing yet</TextBlock>
+                        ToolTip="select your blending method to get instructions" SelectionChanged="FillTypeChange">
+                <TabItem Header="Air top" Background="Azure">
+                    <TextBlock x:Name="txt_air" Background="Azure">Plain air fill or topping with air</TextBlock>
                 </TabItem>
                 <TabItem Header="Nitrox CFM top">
-                    <TextBlock x:Name="txt_nitrox">Nothing yet</TextBlock>
+                    <TextBlock x:Name="txt_nitrox">Continous Flow Mix (CFM) with Nitrox, max 36% Oxygen</TextBlock>
                 </TabItem>
                 <TabItem Header="Trimix CFM top">
-                    <TextBlock x:Name="txt_tmx">Nothing yet</TextBlock>
+                    <TextBlock x:Name="txt_tmx">Continous Flow Mix (CFM) with Trimix</TextBlock>
                 </TabItem>
-                <TabItem Header="Partial Pressure">
-                    <TextBlock x:Name="txt_pp">Nothing yet</TextBlock>
+                <TabItem Header="Partial Pressure" Background="Orange">
+                    <TextBlock x:Name="txt_pp" Background="Orange">Partial Pressure filling, start with Helium, then Oxygen, top with air</TextBlock>
                 </TabItem>
                 <TabItem Header="He + Nitrox CFM">
-                    <TextBlock x:Name="txt_henx">Nothing yet</TextBlock>
+                    <TextBlock x:Name="txt_henx">Add Helium by decanting, then top with Nitrox CFM</TextBlock>
                 </TabItem>
             </TabControl>
+            <TextBlock Grid.Row="3" Grid.ColumnSpan="2" x:Name="txt_result" Background="White">Results appear here</TextBlock>
         </Grid>
     </Grid>
 

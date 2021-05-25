@@ -15,6 +15,7 @@ using System.Windows.Documents;
 using System.Reflection;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Windows.Media;
 
 //[assembly: AssemblyVersion("1.1.0.0")]
 
@@ -37,7 +38,7 @@ namespace FillCalcWin
             o2_price = 4.14,
             he_price = 25.00,
             compressor_price = 5.00,
-            selected_tab = (int) TmxCalcClass.FILLTYPE.pp
+            selected_tab = (int)TmxCalcClass.FILLTYPE.pp
         };
         public Window1 HelpWindow;
 
@@ -55,6 +56,7 @@ namespace FillCalcWin
             gas.txt_pp = this.txt_pp;
             gas.txt_henx = this.txt_henx;
             gas.txt_cost = this.txt_cost;
+            gas.txt_result = this.txt_result;
             // do the first calculation with default values
             gas.CalculateGas();
 
@@ -138,7 +140,7 @@ namespace FillCalcWin
             private int _stop_o2;
             private int _stop_he;
             private int _selected_tab;
-            private TextBlock _txt_air, _txt_nitrox, _txt_tmx, _txt_pp, _txt_henx;
+            private TextBlock _txt_air, _txt_nitrox, _txt_tmx, _txt_pp, _txt_henx, _txt_result;
             public TextBlock txt_cost;
             private int _tank_liters;
             double _o2_price;
@@ -153,6 +155,7 @@ namespace FillCalcWin
             public TextBlock txt_tmx { get { return _txt_tmx; } set { _txt_tmx = value; } }
             public TextBlock txt_pp { get { return _txt_pp; } set { _txt_pp = value; } }
             public TextBlock txt_henx { get { return _txt_henx; } set { _txt_henx = value; } }
+            public TextBlock txt_result { get { return _txt_result; } set { _txt_result = value; } }
 
             public bool VdW
             {
@@ -305,7 +308,7 @@ namespace FillCalcWin
             public void CalculateGas()
             {
                 TmxCalcClass.TmxResult result;
-                VanDerWaals.VdW_Result vdw_result = new VanDerWaals.VdW_Result {status_code = 66, status_txt = "dazed and confused"};
+                VanDerWaals.VdW_Result vdw_result = new VanDerWaals.VdW_Result { status_code = 66, status_txt = "dazed and confused" };
 
                 if (_txt_air != null)
                 {
@@ -318,10 +321,19 @@ namespace FillCalcWin
                     filltype = TmxCalcClass.filltypes[selected_tab];
                     result = TmxCalcClass.TmxCalc(filltype, start_bar, start_o2, start_he,
                                                 stop_bar, stop_o2, stop_he);
-                    if (_vdw == true) {
+                    if (_vdw == true & selected_tab == (int)TmxCalcClass.FILLTYPE.pp)
+                    {
                         vdw_result = VanDerWaals.vdw_calc(start_bar, stop_bar, start_o2, start_he, stop_o2, stop_he, tank_liters, 20.0);
+                        _txt_result.Text = vdw_result.status_txt;
                     }
-                    switch (selected_tab)
+                    else
+                        _txt_result.Text = result.status_txt;
+                    if (result.status_code != 0)
+                        _txt_result.Background = Brushes.LightPink;
+                    else
+                        _txt_result.Background = Brushes.White;
+
+                    /* switch (selected_tab)
                     {
                         case (int)TmxCalcClass.FILLTYPE.air:
                             _txt_air.Text = result.status_txt;
@@ -349,7 +361,8 @@ namespace FillCalcWin
                             selected_tab = (int)TmxCalcClass.FILLTYPE.air;
                             _txt_henx.Text = "Internal error at CalculateGas()";
                             break;
-                    }
+                    } */
+
                     var result_c = TmxCalcClass.Tmx_cost_calc(tank_liters, stop_bar, result.add_o2, result.add_he,
                         o2_price, he_price, compressor_price);
                     txt_cost.Text = result_c.status_txt;
@@ -448,6 +461,37 @@ namespace FillCalcWin
         {
             // Launch browser to github issues...
             System.Diagnostics.Process.Start("https://github.com/eianlei/FillCalcWin/issues");
+        }
+
+        private void FillTypeChange(object sender, SelectionChangedEventArgs e)
+        {
+            switch (gas.selected_tab)
+            {
+                case (int)TmxCalcClass.FILLTYPE.air:
+                    gas.stop_he = 0;
+                    gas.stop_o2 = 21;
+                    iud_stop_he.Visibility = Visibility.Hidden; 
+                    break;
+                case (int)TmxCalcClass.FILLTYPE.nx:
+                    iud_stop_he.Visibility = Visibility.Hidden;
+                    break;
+                case (int)TmxCalcClass.FILLTYPE.tmx:
+                    if (gas.stop_he==0) gas.stop_he = 35;
+                    iud_stop_he.Visibility = Visibility.Visible;
+                    break;
+                case (int)TmxCalcClass.FILLTYPE.pp:
+                    if (gas.stop_he == 0) gas.stop_he = 35;
+                    iud_stop_he.Visibility = Visibility.Visible;
+                    break;
+                case (int)TmxCalcClass.FILLTYPE.cfm:
+                    if (gas.stop_he == 0) gas.stop_he = 35;
+                    iud_stop_he.Visibility = Visibility.Visible;
+                    break;
+                default:
+                    gas.selected_tab = (int)TmxCalcClass.FILLTYPE.air;
+                    gas.txt_result.Text = "Internal error at FillTypeChange()";
+                    break;
+            }
         }
     }
 }

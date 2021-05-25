@@ -224,9 +224,15 @@ namespace FillCalcWin
                 new StdGas("Air", 0, 21, 0),
                 new StdGas("EAN32", 1, 32, 0),
                 new StdGas("EAN50", 2, 50, 0),
-                new StdGas("TMX 21/35", 3, 21, 35),
-                new StdGas("TMX 30/30", 4, 30, 30),
-                new StdGas("Oxygen", 5, 100, 0),
+                new StdGas("Oxygen", 3, 100, 0),
+                new StdGas("TMX 10/70", 4, 10, 70),
+                new StdGas("TMX 12/65", 5, 12, 65),
+                new StdGas("TMX 15/55", 6, 15, 55),
+                new StdGas("TMX 18/45", 7, 18, 45),
+                new StdGas("TMX 21/35", 8, 21, 35),
+                new StdGas("TMX 30/30", 9, 30, 30),
+                new StdGas("TMX 35/25", 10, 35, 25),
+
             };
             public StdGas[] StdGasList { get { return _stdGasList; } }
             public int start_o2

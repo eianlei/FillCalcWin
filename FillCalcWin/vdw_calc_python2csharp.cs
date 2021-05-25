@@ -116,11 +116,12 @@ namespace FillCalcWin
             double n2_f,
             double temperature)
         {
-            var temp_K = temperature + 273.0;
+            double temp_K = temperature + 273.0;
             var _tup_1 = vdw_mix_ab(o2_f, he_f, n2_f);
-            var mix_a = _tup_1.Item1;
-            var mix_b = _tup_1.Item2;
-            var seed_p = ideal_gas_p(n: mols, V: volume, T: temp_K);
+            double mix_a = _tup_1.Item1;
+            double mix_b = _tup_1.Item2;
+            double seed_p = ideal_gas_p(n: mols, V: volume, T: temp_K);
+            double solved_p = 0;
 
             // fsolve not available, as we do not have scipy library in C# as such
             // var solved_p = fsolve(van_der_waals_p, seed_p, (mols, volume, temp_K, mix_a, mix_b));
@@ -128,7 +129,15 @@ namespace FillCalcWin
             // instead use algorithms at RootFinding.cs module, reused from
             // https://www.codeproject.com/Articles/79541/Three-Methods-for-Root-finding-in-C
             VdW_eqation vdw_eq = new VdW_eqation(p: seed_p, n: mols, V: volume, T: temp_K, a: mix_a, b: mix_b);
-            double solved_p = RootFinding.Bisect(vdw_eq.solve_pressure, seed_p * 0.6, seed_p * 1.5, 0.001, 0.1);
+            try
+            {
+                solved_p = RootFinding.Bisect(vdw_eq.solve_pressure, seed_p * 0.6, seed_p * 1.5, 0.001, 0.1);
+            }
+            catch (Exception e)
+            {
+                solved_p = -1;
+                Console.WriteLine(e.Message);
+            }
 
             return solved_p;
         }
@@ -195,6 +204,9 @@ namespace FillCalcWin
             double vdw_start_mols_o2 = 0;
             double vdw_start_mols_he = 0;
             double vdw_start_mols_n2 = 0;
+            double vdw_want_mols_o2 = 0;
+            double vdw_want_mols_he = 0;
+            double vdw_want_mols_n2 = 0;
 
             // assume end temperature is same as start, could change this later to make things more complicated
             double end_temp_c = start_temp_c;
@@ -206,6 +218,14 @@ namespace FillCalcWin
             double want_o2_f = want_o2 / 100.0;
             double want_he_f = want_he / 100.0;
             double want_n2_f = 1.0 - want_o2_f - want_he_f;
+
+            // some basic sanity checks
+            if (want_o2==21 & want_he == 0)
+            {
+                vdw_result.status_txt = "ERROR 01: just filling air";
+                vdw_result.status_code = 1;
+                return vdw_result;
+            }
 
             // how many mols of gas we have at start, in total and of each kind
             if (start_bar > 0)  // vdw_solve_mols() will crash if you try with 0 bars
@@ -221,9 +241,17 @@ namespace FillCalcWin
 
             // how many mols of gas we want to have, in total and of each kind
             double vdw_want_mols_all = vdw_solve_mols(want_bar, volume, want_o2_f, want_he_f, want_n2_f, end_temp_c);
-            double vdw_want_mols_o2 = vdw_want_mols_all * want_o2_f;
-            double vdw_want_mols_he = vdw_want_mols_all * want_he_f;
-            double vdw_want_mols_n2 = vdw_want_mols_all * want_n2_f;
+            if (vdw_want_mols_all > 0)
+            {
+                vdw_want_mols_o2 = vdw_want_mols_all * want_o2_f;
+                vdw_want_mols_he = vdw_want_mols_all * want_he_f;
+                vdw_want_mols_n2 = vdw_want_mols_all * want_n2_f;
+            } else
+            {
+                vdw_result.status_txt = "ERROR 11: vdw_want_mols_all";
+                vdw_result.status_code = 11;
+                return vdw_result;
+            }
 
             // how many mols we need to fill
             double vdw_fill_mols_all = vdw_want_mols_all - vdw_start_mols_all;

@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 using System;
 using System.Linq;
 using System.Windows.Controls.Ribbon;
-using FillCalcWPF;
+using FillCalcWin;
 using Microsoft.Win32;
 using System.IO;
 using System.Windows.Documents;
@@ -36,7 +36,8 @@ namespace FillCalcWin
             tank_liters = 24,
             o2_price = 4.14,
             he_price = 25.00,
-            compressor_price = 5.00
+            compressor_price = 5.00,
+            selected_tab = (int) TmxCalcClass.FILLTYPE.pp
         };
         public Window1 HelpWindow;
 
@@ -145,6 +146,7 @@ namespace FillCalcWin
             double _compressor_price;
             public string calc_result;
             public string cost_result;
+            private bool _vdw;
 
             public TextBlock txt_air { get { return _txt_air; } set { _txt_air = value; } }
             public TextBlock txt_nitrox { get { return _txt_nitrox; } set { _txt_nitrox = value; } }
@@ -152,6 +154,11 @@ namespace FillCalcWin
             public TextBlock txt_pp { get { return _txt_pp; } set { _txt_pp = value; } }
             public TextBlock txt_henx { get { return _txt_henx; } set { _txt_henx = value; } }
 
+            public bool VdW
+            {
+                get { return _vdw; }
+                set { _vdw = value; CalculateGas(); }
+            }
             public int selected_tab
             {
                 get { return _selected_tab; }
@@ -292,6 +299,8 @@ namespace FillCalcWin
             public void CalculateGas()
             {
                 TmxCalcClass.TmxResult result;
+                VanDerWaals.VdW_Result vdw_result = new VanDerWaals.VdW_Result {status_code = 66, status_txt = "dazed and confused"};
+
                 if (_txt_air != null)
                 {
                     //_txt_air.Text = $"start \n"+
@@ -303,6 +312,9 @@ namespace FillCalcWin
                     filltype = TmxCalcClass.filltypes[selected_tab];
                     result = TmxCalcClass.TmxCalc(filltype, start_bar, start_o2, start_he,
                                                 stop_bar, stop_o2, stop_he);
+                    if (_vdw == true) {
+                        vdw_result = VanDerWaals.vdw_calc(start_bar, stop_bar, start_o2, start_he, stop_o2, stop_he, tank_liters, 20.0);
+                    }
                     switch (selected_tab)
                     {
                         case (int)TmxCalcClass.FILLTYPE.air:
@@ -315,7 +327,14 @@ namespace FillCalcWin
                             _txt_tmx.Text = result.status_txt;
                             break;
                         case (int)TmxCalcClass.FILLTYPE.pp:
-                            _txt_pp.Text = result.status_txt;
+                            if (_vdw)
+                            {
+                                _txt_pp.Text = vdw_result.status_txt;
+                            }
+                            else
+                            {
+                                _txt_pp.Text = result.status_txt;
+                            }
                             break;
                         case (int)TmxCalcClass.FILLTYPE.cfm:
                             _txt_henx.Text = result.status_txt;

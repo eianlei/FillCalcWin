@@ -1,6 +1,7 @@
 ﻿using System.Linq;
+using FillCalcWin;
 
-namespace FillCalcWPF
+namespace FillCalcWin
 {
     class TmxCalcClass
     {

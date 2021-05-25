@@ -26,4 +26,7 @@ https://github.com/eianlei/FillCalcWin/releases
 - But FillCalcWin is really easy to install and use on Windows, because a precompiled binary and installer can be made easily. So almost anyone can install and use it. 
 - The Python version is somewhat hard to install if you are not familiar with all the tools.
 
+# download and install
+Go to the release page to download the latest release.
 
+https://github.com/eianlei/FillCalcWin/releases

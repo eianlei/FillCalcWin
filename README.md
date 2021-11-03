@@ -26,7 +26,8 @@ https://github.com/eianlei/FillCalcWin/releases
 - There is also a Python version FillCalc2.py, that will run on any platform such as MAC or Linux
 - But FillCalcWin is really easy to install and use on Windows, because a precompiled binary and installer can be made easily. So almost anyone can install and use it. 
 - The Python version is somewhat hard to install if you are not familiar with all the dev tools.
-- Web and Mobile (Android, IOS) versions might be coming in future...
+- Web version: https://github.com/eianlei/scalc
+- Mobile (Android, IOS) versions might be coming in future...
 
 # Background
 FillCalcWin is a rewrite of FillCalc2.py app from original Python/Qt5 implementation to C#/WPF.
@@ -36,6 +37,9 @@ https://github.com/eianlei/pydplan/blob/master/FillCalc2.py
 
 See also the doc about the Python version:
 **https://github.com/eianlei/pydplan/blob/master/doc/fillcalc2.md**
+
+There is web version as well at https://github.com/eianlei/scalc. 
+For the web version the Python and C# has been converted to Javascript so it will run on web browser. Qt5 and XAML UI converted to HTML and CSS.
 
 # Technical highlights
 - The Python code has been converted to C#.
